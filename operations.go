@@ -1,20 +1,22 @@
 package main
 
 import (
-	"fmt"
+	"strconv"
 )
 
-func Compute(op1 int, op2 int, operator string) {
+func Compute(op1 int, op2 int, operator string) string {
 	switch operator {
 	case "*":
-		fmt.Println(op1 * op2)
+		return strconv.Itoa(op1 * op2)
 	case "/":
-		fmt.Println(op1 / op2)
+		return strconv.Itoa(op1 / op2)
 	case "-":
-		fmt.Println(op1 - op2)
+		return strconv.Itoa(op1 - op2)
 	case "+":
-		fmt.Println(op1 + op2)
+		return strconv.Itoa(op1 + op2)
 	}
+
+	return "Operator not valid. Please input *,/,-, or +"
 }
 
 func GetArgs(equation string) (operand1, operand2, op string) {

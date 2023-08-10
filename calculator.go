@@ -1,6 +1,9 @@
 package main
 
 import (
+	"log"
+	"strconv"
+
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
@@ -17,6 +20,22 @@ type Calculator struct {
 func (calc *Calculator) updateText(text string) {
 	calc.equation = calc.equation + text
 	calc.input.SetText(calc.equation)
+}
+
+func (calc *Calculator) equals() {
+	op1, op2, operator := GetArgs(calc.equation)
+
+	op1AsInt, err := strconv.Atoi(op1)
+	op2AsInt, err2 := strconv.Atoi(op2)
+
+	if err != nil || err2 != nil {
+		log.Fatal(err, err2)
+	}
+
+	result := Compute(op1AsInt, op2AsInt, operator)
+
+	calc.equation = ""
+	calc.input.SetText(result)
 }
 
 func (calc *Calculator) addButton(text string, action func()) *widget.Button {
@@ -36,8 +55,6 @@ func (calc *Calculator) characterButton(character rune) *widget.Button {
 func (calc *Calculator) Build(app fyne.App) {
 	calc.input = &widget.Label{Alignment: fyne.TextAlignCenter}
 	calc.input.TextStyle.Monospace = true
-
-	//Why does it give that error.
 
 	calc.window = app.NewWindow("Calculator")
 	calc.window.SetContent(container.NewGridWithColumns(1,
@@ -66,7 +83,7 @@ func (calc *Calculator) Build(app fyne.App) {
 			container.NewGridWithColumns(2,
 				calc.characterButton('0'),
 				calc.characterButton('.')),
-			calc.characterButton('='))),
+			calc.addButton("=", calc.equals))),
 	)
 
 	//canvas := calc.window.Canvas()
